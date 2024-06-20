@@ -27,12 +27,8 @@ public class PaisView {
   }
 
   @GetMapping("/pais")
-  public ResponseEntity<List<PaisDto>> consultarPais (
-    @Valid
+  public ResponseEntity consultarPais (
     @RequestParam(name = "pais")
-    @NotNull(message = "El parametro pais no puede ser nulo")
-    @Pattern(regexp = "^[a-zA-Z]*$", message = "El parametro pais solo puede contener letras")
-    @NotEmpty(message = "El parametro pais no puede estar vacio")
     String pais) {
     return paisController.consultarPais(pais);
   }

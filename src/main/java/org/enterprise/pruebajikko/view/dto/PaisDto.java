@@ -12,5 +12,5 @@ public class PaisDto {
   private String nombre;
   private String moneda;
   private Long poblacion;
-  private String ciudad;
+  private String capital;
 }

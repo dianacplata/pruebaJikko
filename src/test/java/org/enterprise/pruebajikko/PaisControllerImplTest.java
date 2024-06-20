@@ -37,7 +37,7 @@ public class PaisControllerImplTest {
       .nombre("Colombia")
       .moneda("COP")
       .poblacion(50000000L)
-      .ciudad("Bogota").build();
+      .capital("Bogota").build();
     List<PaisDto> paisDtos = new ArrayList<>();
     paisDtos.add(paisDto);
 

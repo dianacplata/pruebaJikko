@@ -34,7 +34,7 @@ public class PaisServiceImpl implements IPaisService{
         paisInfo = PaisDto.builder()
           .nombre((String) fields[0])
           .moneda((String) fields[1])
-          .ciudad((String) fields[3])
+          .capital((String) fields[3])
           .build();
       }
     }
