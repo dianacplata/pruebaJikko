@@ -271,7 +271,7 @@ public class PaisControllerImpl implements PaisController {
     departamentoService.deleteDepartamentos(departamentos);
   }
 
-  private void eliminarCiudad(Integer departamentoId) throws Exception {
+  public void eliminarCiudad(Integer departamentoId) throws Exception {
     List<Ciudad> ciudades = ciudadService.findCiudadByIdDepartamento(departamentoId);
     if (ciudades != null && !ciudades.isEmpty()) {
       ciudadService.deleteCiudades(ciudades);
