@@ -75,16 +75,15 @@ public class PaisControllerImpl implements PaisController {
   public ResponseEntity crearPais(PaisInfoDto paisInfoDto) {
     ResponseEntity responseEntity = null;
     try {
+      validarPaisDto(paisInfoDto);
 
       if (paisService.findPais(paisInfoDto.getNombre()).isEmpty()) {
-
         Pais pais = Pais.builder()
           .nombre(paisInfoDto.getNombre())
           .moneda(paisInfoDto.getMoneda())
           .sigla(paisInfoDto.getSigla())
           .build();
         paisService.createPais(pais);
-
         if (paisInfoDto.getDepartamentos() != null && !paisInfoDto.getDepartamentos().isEmpty()) {
           crearDepartamento(paisInfoDto.getDepartamentos(), pais.getId());
         }
@@ -92,6 +91,10 @@ public class PaisControllerImpl implements PaisController {
         Map<String, Object> body = new HashMap<>();
         body.put("Info", "Pais creado correctamente");
         responseEntity = ResponseEntity.status(HttpStatus.CREATED).body(body);
+      } else {
+        Map<String, Object> body = new HashMap<>();
+        body.put("Error", "El pais ya existe");
+        responseEntity = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
       }
     } catch (Exception e) {
       Map<String, Object> body = new HashMap<>();
@@ -99,6 +102,57 @@ public class PaisControllerImpl implements PaisController {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
     return responseEntity;
+  }
+
+  private void validarPaisDto(PaisInfoDto paisInfoDto) {
+    if (paisInfoDto == null) {
+      throw new IllegalArgumentException("El objeto paisInfoDto no puede ser nulo");
+    }
+
+    if (paisInfoDto.getNombre() == null || paisInfoDto.getNombre().isEmpty()) {
+      throw new IllegalArgumentException("El nombre del pais no puede ser nulo o vacío");
+    }
+
+    if (paisInfoDto.getMoneda() == null || paisInfoDto.getMoneda().isEmpty()) {
+      throw new IllegalArgumentException("La moneda del pais no puede ser nula o vacía");
+    }
+
+    if (paisInfoDto.getSigla() == null || paisInfoDto.getSigla().isEmpty()) {
+      throw new IllegalArgumentException("La sigla del pais no puede ser nula o vacía");
+    }
+
+    if (paisInfoDto.getDepartamentos() == null || paisInfoDto.getDepartamentos().isEmpty()) {
+      throw new IllegalArgumentException("El pais debe tener al menos un departamento");
+    }
+
+    for (DepartamentoDto departamentoDto : paisInfoDto.getDepartamentos()) {
+      if (departamentoDto.getNombre() == null || departamentoDto.getNombre().isEmpty()) {
+        throw new IllegalArgumentException("El nombre del departamento no puede ser nulo o vacío");
+      }
+
+      if (departamentoDto.getPoblacion() == null || departamentoDto.getPoblacion() <= 0) {
+        throw new IllegalArgumentException("La población del departamento no puede ser nula o menor o igual a 0");
+      }
+
+      if (departamentoDto.getCiudades() == null || departamentoDto.getCiudades().isEmpty()) {
+        throw new IllegalArgumentException("El departamento debe tener al menos una ciudad");
+      }
+
+      int validarCapital = 0;
+      for (CiudadDto ciudadDto : departamentoDto.getCiudades()) {
+        if (ciudadDto.getNombre() == null || ciudadDto.getNombre().isEmpty()) {
+          throw new IllegalArgumentException("El nombre de la ciudad no puede ser nulo o vacío");
+        }
+
+        if (ciudadDto.isCapital()) {
+          validarCapital++;
+        }
+      }
+
+      if (validarCapital != 1) {
+        throw new IllegalArgumentException("El pais debe tener una ciudad capital");
+      }
+    }
   }
 
 
@@ -131,7 +185,7 @@ public class PaisControllerImpl implements PaisController {
   public ResponseEntity actualizarPais(PaisInfoDto paisInfoDto) {
     ResponseEntity responseEntity = null;
     try {
-
+      validarPaisDto(paisInfoDto);
       if (paisService.findById(paisInfoDto.getId()) != null) {
 
         Pais pais = Pais.builder()
@@ -196,6 +250,10 @@ public class PaisControllerImpl implements PaisController {
         Map<String, Object> body = new HashMap<>();
         body.put("Info", "Pais eliminado correctamente");
         responseEntity = ResponseEntity.status(HttpStatus.OK).body(body);
+      } else {
+        Map<String, Object> body = new HashMap<>();
+        body.put("Error", "El pais no existe");
+        responseEntity = ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
       }
     } catch (Exception e) {
       Map<String, Object> body = new HashMap<>();
