@@ -1,5 +1,6 @@
 package org.enterprise.pruebajikko.model.service;
 
+import org.enterprise.pruebajikko.model.entity.Pais;
 import org.enterprise.pruebajikko.model.repository.PaisRepository;
 import org.enterprise.pruebajikko.view.dto.PaisDto;
 import org.springframework.stereotype.Service;
@@ -45,4 +46,26 @@ public class PaisServiceImpl implements IPaisService{
     }
     return paisesInfo;
   }
+
+  @Override
+  public void createPais(Pais pais) {
+    paisRepository.save(pais);
+  }
+
+  @Override
+  public void deletePais(Integer pais) {
+    paisRepository.deleteById(pais);
+  }
+
+  @Override
+  public void updatePais(Pais pais) {
+    paisRepository.save(pais);
+  }
+
+  @Override
+  public Pais findById(Integer id) {
+    return paisRepository.findById(id).orElse(null);
+  }
+
+
 }

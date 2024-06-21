@@ -7,7 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 
-public interface PaisRepository extends CrudRepository<Pais, Long> {
+public interface PaisRepository extends CrudRepository<Pais, Integer> {
 
   @Query(value = "select p.nombre,p.moneda, d.poblacion, c.nombre, c.capital as ciudad from Pais p JOIN p.departamentos d join d.ciudades c " +
           "where p.nombre = ?1 ")
